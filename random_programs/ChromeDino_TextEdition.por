@@ -3,8 +3,8 @@ programa {
   inclua biblioteca Util --> u
 
   inteiro pontos = 0, recorde = 0, sorteia_obstaculo, km
-  cadeia obstaculo, acao, continuar
-  logico perdeu
+  cadeia obstaculo = "", acao, continuar
+  logico perdeu = falso
 
   funcao inicio() {
 
@@ -29,7 +29,7 @@ programa {
 
         consequencia_acao() //Linha 83-101.
 
-        recorde() //Linha 105-110.
+        recordes() //Linha 105-110.
 
         u.aguarde(1500)
 
@@ -102,7 +102,7 @@ programa {
 
 
 
-  funcao recorde(){ //Defini o recorde.
+  funcao recordes(){ //Defini o recorde.
 
     se(pontos > recorde){
       recorde = pontos //Só atualiza o recorde se os pontos atuais ultrapassarem o recorde.
