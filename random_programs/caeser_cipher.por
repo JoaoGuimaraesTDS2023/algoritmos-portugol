@@ -47,8 +47,8 @@ programa
 		se(resp == "criptografar" ou resp == "1"){
 			
 			criptografia = verdadeiro
-			leia_chave_mensagem()
-			resultado()
+			leia_chave_mensagem() //lê a mensagem a ser (des)criptografada e a sua chave.
+			resultado() //funcao que (des)criptografa a mensagem digitada pelo usuário.
 			
 		}senao se(resp == "descriptografar" ou resp == "2"){
 			
@@ -74,7 +74,7 @@ programa
 		leia(chave_c)
 		chave_c = tx.caixa_baixa(chave_c)
 
-		verifique_chave()
+		verifique_chave()  //verifica se a chave digitada é válida.
 	}
 	
 	funcao verifique_chave() //verifica se a chave digitada é válida.
@@ -85,9 +85,9 @@ programa
 		
 		se(chave_c == ""){ //se o usuário não digitar nenhuma chave, o programa escreverá todas as possibilidades possiveis de (des)criptografização.
 			
-			para(inteiro i = 0 ; i < tamanho_alfabeto ; i++){
+			para(inteiro i = 0 ; i < tamanho_alfabeto ; i++){ //repete até passar por todas as chaves possíveis.
 				chave_i = i
-				resultado()
+				resultado() //funcao que (des)criptografa a mensagem digitada pelo usuário.
 			}
 			
 		}senao se(t.cadeia_e_inteiro(chave_c, 10)){ //caso o numero seja inteiro, o código é executado normalmente.
@@ -112,24 +112,8 @@ programa
 
 			letra = t.cadeia_para_caracter(tx.extrair_subtexto(mensagem, i, i+1))
 			
-			para(inteiro j=0; j < tamanho_alfabeto; j++){ //verifica se a letra está no "alfabeto" para ser (des)criptografada.
-
-				se(letra == alfabeto[j]){
-
-					se(criptografia){ 
-						posicao = (j + chave_i) % 26 //calculo para criptografar.
-					}senao{
-						posicao = (j - chave_i) % 26 //calculo para DEScriptografar.
-					}
-					
-					se(posicao < 0){
-						posicao += 26
-					}
-					
-					letra = alfabeto[posicao]
-					pare
-				}
-			}
+			criptografe() //criptografa uma letra da mensagem.
+			
 			mensagem_resposta += t.caracter_para_cadeia(letra)
 		}
 		escreva("Chave: ", chave_i, "\n")
@@ -155,5 +139,27 @@ programa
 			caso contrario: pare
 		}
 		
+	}
+
+	funcao criptografe() //criptografa uma letra da mensagem.
+	{
+		para(inteiro j=0; j < tamanho_alfabeto; j++){ //verifica se a letra está no "alfabeto" para ser (des)criptografada.
+
+				se(letra == alfabeto[j]){
+
+					se(criptografia){ 
+						posicao = (j + chave_i) % 26 //calculo para criptografar.
+					}senao{
+						posicao = (j - chave_i) % 26 //calculo para DEScriptografar.
+					}
+					
+					se(posicao < 0){
+						posicao += 26
+					}
+					
+					letra = alfabeto[posicao]
+					pare
+				}
+			}		
 	}
 }
