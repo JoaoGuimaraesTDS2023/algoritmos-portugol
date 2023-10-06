@@ -4,28 +4,29 @@ programa
 	inclua biblioteca Texto --> tx
 	inclua biblioteca Util --> u
 
-	caracter alfabeto[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'}
+	caracter alfabeto[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'} //alfabeto para criptografar e descriptografar as mensagens.
 
-	caracter letra
+	caracter letra //letra selecionada para codificar.
 	
-	cadeia mensagem
-	cadeia mensagem_resposta
-	cadeia chave_c
+	cadeia mensagem //mensagem digitada pelo jogador.
+	cadeia mensagem_resposta //mensagem gerada pela criptografia/descriptografia da mensagem do jogador.
+	cadeia chave_c //chave da cifra digitada pelo usuário.
 	
-	inteiro chave_i
-	inteiro posicao
-	inteiro tamanho_mensagem
-	inteiro tamanho_alfabeto = u.numero_elementos(alfabeto)
+	inteiro chave_i //caso o usuário digite uma chave numérica, essa variável receberá o valor.
+	inteiro posicao //posicão do 'letra' no vetor 'alfabeto'.
+	inteiro tamanho_mensagem //tamanho, de caracteres, da mensagem digitada pelo usuário
+	inteiro tamanho_alfabeto = u.numero_elementos(alfabeto) //tamanho, de elementos, do 'alfabeto'.
 
-	logico criptografia
-	logico chave
+	logico criptografia //confirma se o usuário quer criptografar ou descriptografar.
+	logico chave //verifica se o usuário digitou uma chave corretamente.
 	
 	funcao inicio()
 	{
-		introducao()
+		introducao() //executa todo o programa.
+		continuar()
 	}
 
-	funcao introducao()
+	funcao introducao() //Pergunta qual ação o usuário quer executar.
 	{
 		cadeia resposta
 
@@ -41,22 +42,29 @@ programa
 		criptografar_descriptografar(resposta)
 	}
 
-	funcao criptografar_descriptografar(cadeia resp)
+	funcao criptografar_descriptografar(cadeia resp) //verifica se o usuário escolheu entre criptografar e descriptografar.
 	{
 		se(resp == "criptografar" ou resp == "1"){
+			
 			criptografia = verdadeiro
+			leia_chave_mensagem()
 			resultado()
+			
 		}senao se(resp == "descriptografar" ou resp == "2"){
+			
 			criptografia = falso
+			leia_chave_mensagem()
 			resultado()
+			
 		}senao{
+			
 			limpa()
 			escreva("Escolha uma das opções propostas!\n")
 			introducao()
 		}
 	}
 
-	funcao leia_chave_mensagem()
+	funcao leia_chave_mensagem() //lê a mensagem a ser (des)criptografada e a sua chave.
 	{	
 		escreva("Digite a mensagem: ")
 		leia(mensagem)
@@ -69,45 +77,49 @@ programa
 		verifique_chave()
 	}
 	
-	funcao verifique_chave()
+	funcao verifique_chave() //verifica se a chave digitada é válida.
 	{
 		limpa()
+
+		chave = falso
 		
-		se(chave_c == ""){
+		se(chave_c == ""){ //se o usuário não digitar nenhuma chave, o programa escreverá todas as possibilidades possiveis de (des)criptografização.
 			
-			se(criptografia){
-				escreva("Para Criptografa/Descriptografar uma mensagem, você precisa informar uma chave! (número entre 0 e 25)\n")
-				leia_chave_mensagem()
+			para(inteiro i = 0 ; i < tamanho_alfabeto ; i++){
+				chave_i = i
+				resultado()
 			}
 			
-		}senao se(t.cadeia_e_inteiro(chave_c, 10)){
+		}senao se(t.cadeia_e_inteiro(chave_c, 10)){ //caso o numero seja inteiro, o código é executado normalmente.
 			
 			chave_i = t.cadeia_para_inteiro(chave_c, 10)
+			chave = verdadeiro
 			
-		}senao{
+		}senao{ //caso contrario, o programa pede novamente as informações ao usuário.
+			
 			escreva("Informe uma chave válida! (um número entre 0 e 25)\n")
 			leia_chave_mensagem()
 		}
 	}
 
-	funcao resultado()
+	funcao resultado() //funcao que (des)criptografa a mensagem digitada pelo usuário.
 	{
-		leia_chave_mensagem()
-		
 		tamanho_mensagem = tx.numero_caracteres(mensagem)
 
-		para(inteiro i=0; i < tamanho_mensagem; i++){
+		mensagem_resposta = ""
+
+		para(inteiro i=0; i < tamanho_mensagem; i++){ //(des)criptografa letra por letra.
 
 			letra = t.cadeia_para_caracter(tx.extrair_subtexto(mensagem, i, i+1))
 			
-			para(inteiro j=0; j < tamanho_alfabeto; j++){
+			para(inteiro j=0; j < tamanho_alfabeto; j++){ //verifica se a letra está no "alfabeto" para ser (des)criptografada.
 
 				se(letra == alfabeto[j]){
 
-					se(criptografia){
-						posicao = (j + chave_i) % 26
+					se(criptografia){ 
+						posicao = (j + chave_i) % 26 //calculo para criptografar.
 					}senao{
-						posicao = (j - chave_i) % 26
+						posicao = (j - chave_i) % 26 //calculo para DEScriptografar.
 					}
 					
 					se(posicao < 0){
@@ -120,25 +132,26 @@ programa
 			}
 			mensagem_resposta += t.caracter_para_cadeia(letra)
 		}
-		escreva(mensagem_resposta, "\n")
+		escreva("Chave: ", chave_i, "\n")
+		escreva("Mensagem final: ", mensagem_resposta, "\n\n")
 		
-		continuar()
 	}
 
-	funcao continuar()
+	funcao continuar() //funcao que pergunta se o usuário quer digitar outra mensagem, ou parar o programa.
 	{	
 		cadeia repetir
 	
-		faca
+		faca //repete a pergunta enquanto não houver resposta.
 		{
 			escreva("\nDeseja repetir? \n[s] \t[n]\n")
 			leia(repetir)
+			limpa()
 			
 		}enquanto(repetir != "n" e repetir != "s")
 
-		escolha(t.cadeia_para_caracter(repetir))
+		escolha(t.cadeia_para_caracter(repetir)) //verifica se se o programá irá repetir ou não.
 		{
-			caso 's': introducao() pare
+			caso 's': inicio() pare
 			caso contrario: pare
 		}
 		
